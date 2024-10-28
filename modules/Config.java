@@ -12,16 +12,6 @@ public class Config {
     private String output_file;
     private int value_of_N;
 
-    public static boolean isValidFilePath(String pathStr) {
-        try {
-            Path path = Paths.get(pathStr);
-            return Files.exists(path) && Files.isRegularFile(path);
-        } catch (Exception e) {
-            System.out.println("This is not a valid file path.");
-            return false;
-        }
-    }
-
     public Config(String[] args) throws IOException {
         
         if(args.length < 3 ){ 
@@ -35,10 +25,12 @@ public class Config {
         else{
             System.out.println("Success!");
         }
-       
+
+        Utils utils = new Utils();
+
         // Error: One or more arguments are not valid integers
         input_file = args[0];  output_file = args[1];
-        if (!isValidFilePath(input_file) || !isValidFilePath(output_file)){ 
+        if (!utils.isValidFilePath(input_file) || !utils.isValidFilePath(output_file)){ 
             System.exit(1);    
         }
         else if ( (input_file == null || input_file.isEmpty()) 

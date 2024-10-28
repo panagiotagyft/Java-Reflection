@@ -13,37 +13,39 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            // check arguments and save them!
+            
+            // validate and store arguments!
             System.out.println("Test1");
             Config config = new Config(args);
-        
+            
+            // get the path to the input file 
             Path path = Paths.get(config.get_input_file());
             try {
-                    
+                
+                // retrieve all lines from the input file
                 List<String> lines = Files.readAllLines(path);
-        
+
+                // create reflection and utility objects to analyze, sort, and extract top N elements
                 Reflection reflection = new Reflection();
                 Utils utils = new Utils();
                 
-        
-                for (String line : lines) {
-                    System.out.println(line);
+                // process each class
+                for (String className : lines) {
+                    // System.out.println(className);
                     
-                    reflection.DeclaredFields(line);
+                    // 1a. Apply reflection to find and analyze all declared fields in the class.
+                    reflection.DeclaredFields(className);
                 }
-                List<Map.Entry<String, Integer>> topN_DeclaredFields = utils.get_topN(reflection.get_DeclaredFields(), config.get_N());
+                
+                // extract the top N declared fields
+                List<String> topN_DeclaredFields = utils.get_topN(reflection.get_DeclaredFields(), config.get_N());
 
             } catch (IOException e) {
-                System.out.println("Error! Cannot read file!");
-                System.exit(1);
+                System.out.println("An unexpected error: " + e.getMessage());
             }
 
-        } catch (IOException e) {
-            System.out.println("I/O error: " + e.getMessage());
-            System.exit(1);
-        } catch (Exception e) {
+        }catch (Exception e) {
             System.out.println("An unexpected error: " + e.getMessage());
-            System.exit(1);
         }
     }
 }
