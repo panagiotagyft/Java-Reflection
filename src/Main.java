@@ -35,10 +35,13 @@ public class Main {
                     
                     // 1a. Apply reflection to find and analyze all declared fields in the class.
                     reflection.DeclaredFields(className);
+                    reflection.TotalFields(className);
                 }
                 
                 // extract the top N declared fields
                 List<String> topN_DeclaredFields = utils.get_topN(reflection.get_DeclaredFields(), config.get_N());
+                 System.out.println("-------------");
+                List<String> topN_TotalFields = utils.get_topN(reflection.get_TotalFields(), config.get_N());
 
             } catch (IOException e) {
                 System.out.println("An unexpected error: " + e.getMessage());
