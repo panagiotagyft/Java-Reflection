@@ -23,9 +23,7 @@ public class Utils {
     }
    
     public List<String> get_topN(Map<String, Integer> map, int N) {
-        
-        // PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(Comparator.comparing(Map.Entry::getValue));
-        
+               
         PriorityQueue<Map.Entry<String, Integer>> minHeap = new PriorityQueue<>(
             (val1, val2) -> val1.getValue().compareTo(val2.getValue())
         );
@@ -40,15 +38,11 @@ public class Utils {
             }
         }
 
-
-        // Extract the keys from the PriorityQueue in sorted order
+        // extract the keys from the minheap and insert them in reverse order into the list
         List<String> topN = new ArrayList<>();
         while (!minHeap.isEmpty()) {
-            topN.add(minHeap.poll().getKey());
+            topN.add(0, minHeap.poll().getKey());
         }
-
-        // reverse the list to have it in descending order
-        Collections.reverse(topN);
 
         // Optional: Print the top N keys
         topN.forEach(System.out::println);
