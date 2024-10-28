@@ -7,12 +7,11 @@ import java.util.PriorityQueue;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
-import java.util.Collections;
-
 
 public class Utils {
 
     public boolean isValidFilePath(String path_name) {
+       
         try {
             Path path = Paths.get(path_name);
             return Files.exists(path) && Files.isRegularFile(path);
@@ -20,6 +19,7 @@ public class Utils {
             System.out.println("This is not a valid file path.");
             return false;
         }
+    
     }
    
     public List<String> get_topN(Map<String, Integer> map, int N) {
