@@ -1,6 +1,7 @@
 package modules;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
@@ -49,5 +50,21 @@ public class Utils {
         // Return the list of top N keys
         return topN;
     }
+
+    public Map<String, List<String>> reverseAndGroup(Map<String, String> pairs) {
+        Map<String, List<String>> groupedMap = new HashMap<>();
+
+        for (Map.Entry<String, String> entry : pairs.entrySet()) {
+            String point1 = entry.getKey();
+            String point2 = entry.getValue();
+
+            // Δημιουργούμε την αντιστροφή (point2, point1) και την προσθέτουμε στον νέο χάρτη
+            groupedMap.putIfAbsent(point2, new ArrayList<>());
+            groupedMap.get(point2).add(point1);
+        }
+
+        return groupedMap;
+    }
+
 
 }
