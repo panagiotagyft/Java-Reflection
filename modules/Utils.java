@@ -51,18 +51,23 @@ public class Utils {
         return topN;
     }
 
-    public Map<String, List<String>> reverseAndGroup(Map<String, String> pairs) {
+
+    public Map<String, List<String>> groupBySuperclass(Map<String, String> pairs) {
+        
+        //initialize a new map to store the superclass as key and its subclasses as values
         Map<String, List<String>> groupedMap = new HashMap<>();
 
+        // iterate over each (classname, superclass) entry in the input map
         for (Map.Entry<String, String> entry : pairs.entrySet()) {
-            String point1 = entry.getKey();
-            String point2 = entry.getValue();
+            String subclass = entry.getKey();
+            String superclass = entry.getValue();
 
-            // Δημιουργούμε την αντιστροφή (point2, point1) και την προσθέτουμε στον νέο χάρτη
-            groupedMap.putIfAbsent(point2, new ArrayList<>());
-            groupedMap.get(point2).add(point1);
+            // group by superclass, adding the subclass to its list
+            groupedMap.putIfAbsent(superclass, new ArrayList<>());
+            groupedMap.get(superclass).add(subclass);
         }
 
+        // return the map with (superclass, [subclasses]) structure
         return groupedMap;
     }
 

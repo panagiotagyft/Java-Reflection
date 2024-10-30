@@ -141,29 +141,29 @@ public class Reflection {
 
     public void Supertypes(String className) {
         
-        Stack<Class<?>> stack = new Stack<>();
+        Stack<Class<?>> auxiliary_stack = new Stack<>();
 
         try {
-            Class<?> clazz = Class.forName(className);
+
             Set<Class<?>> supertypes1 = new HashSet<>();
 
-            // Ξεκινάμε με την αρχική κλάση
-            stack.push(clazz);
+            // begin with the target class.
+            stack.push(Class.forName(className));
 
             while (!stack.isEmpty()) {
-                Class<?> current = stack.pop();
+                Class<?> current_cls = stack.pop();
 
                 // Προσθέτουμε την υπερκλάση αν δεν είναι ήδη στη λίστα
-                Class<?> superClass = current.getSuperclass();
+                Class<?> superClass = current_cls.getSuperclass();
                 if (superClass != null && superClass != Object.class && supertypes1.add(superClass)) {
-                    pairs_supertypes.put(current.getName(), superClass.getName());
+                    pairs_supertypes.put(current_cls.getName(), superClass.getName());
                     stack.push(superClass); // Προσθήκη της υπερκλάσης στη στοίβα
                 }
 
                 // Προσθήκη όλων των interfaces
-                for (Class<?> iface : current.getInterfaces()) {
+                for (Class<?> iface : current_cls.getInterfaces()) {
                     if (supertypes1.add(iface)) {
-                        pairs_supertypes.put(current.getName(), iface.getName());
+                        pairs_supertypes.put(current_cls.getName(), iface.getName());
                         stack.push(iface); // Προσθήκη του interface στη στοίβα
                     }
                 }
