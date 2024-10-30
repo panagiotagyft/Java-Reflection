@@ -140,51 +140,76 @@ public class Reflection {
     }
 
     public void Supertypes(String className) {
-        
-        Stack<Class<?>> auxiliary_stack = new Stack<>();
+
+        //stack used to store classes as we traverse through their supertypes
+        Stack<Class<?>> stack = new Stack<>();
 
         try {
+            // Set to keep track of discovered supertypes and avoid duplicates
+            Set<Class<?>> discoveredSupertypes = new HashSet<>();
 
-            Set<Class<?>> supertypes1 = new HashSet<>();
-
-            // begin with the target class.
+            // Begin with the target class
             stack.push(Class.forName(className));
 
+            // Process each class in the stack until it's empty
             while (!stack.isEmpty()) {
                 Class<?> current_cls = stack.pop();
 
-                // Προσθέτουμε την υπερκλάση αν δεν είναι ήδη στη λίστα
+                // Retrieve the superclass of the current class
                 Class<?> superClass = current_cls.getSuperclass();
-                if (superClass != null && superClass != Object.class && supertypes1.add(superClass)) {
+
+                // Check if the superclass is valid, not Object, and hasn't been processed
+                if (superClass != null && superClass != Object.class && discoveredSupertypes.add(superClass)) {
+
                     pairs_supertypes.put(current_cls.getName(), superClass.getName());
-                    stack.push(superClass); // Προσθήκη της υπερκλάσης στη στοίβα
+                    stack.push(superClass);
                 }
 
-                // Προσθήκη όλων των interfaces
-                for (Class<?> iface : current_cls.getInterfaces()) {
-                    if (supertypes1.add(iface)) {
-                        pairs_supertypes.put(current_cls.getName(), iface.getName());
-                        stack.push(iface); // Προσθήκη του interface στη στοίβα
+                // Process all interfaces 
+                Class<?>[] interfaces = current_cls.getInterfaces()
+                for (Class<?> interface : interfaces) {
+                   
+                    // If the interface hasn't been recorded, add it to discoveredSupertypes
+                    if (discoveredSupertypes.add(interface)) {     
+                        pairs_supertypes.put(current_cls.getName(), interface.getName());
+                        stack.push(interface);
                     }
                 }
             }
-            
-            // Εκτύπωση όλων των υπερτύπων
-            supertypes1.forEach(supertype -> System.out.println(supertype.getName()));
 
-            supertypes.put(className, supertypes1.size());
-        } catch (ClassNotFoundException e) {
+            // Print the names of all discovered supertypes
+            discoveredSupertypes.forEach(supertype -> System.out.println(supertype.getName()));
+
+            // Record the number of supertypes discovered for the given class
+            supertypes.put(className, discoveredSupertypes.size());
+
+        } 
+        catch (ClassNotFoundException e) {
             System.out.println("Class " + className + " was not found!");
         }
 
     }
 
-    public void Subtypes(String className){
-        Utils utils = new Utils();
 
-        Map<String, List<String>> groupedMap = utils.reverseAndGroup(pairs_supertypes);
+    public void Subtypes(String className){
         
-        subtypes.put(className, groupedMap.size());
+        try{
+            
+            Utils utils = new Utils();
+            
+            // If supertypes haven't been discovered yet, find them!
+            // Subtypes are identified through their supertypes.
+            // We examine the relationship in the opposite direction, 
+            // that is, from superclass to subclass.
+            if(pair_supertypes.isEmpty()){ Supertypes(className); }
+
+            Map<String, List<String>> groupedMap = utils.groupBySuperclass(pairs_supertypes);
+        
+            subtypes.put(className, groupedMap.size());
+        } 
+        catch (ClassNotFoundException e) {
+            System.out.println("Class " + className + " was not found!");
+        }
 
     }
 
