@@ -166,13 +166,13 @@ public class Reflection {
                 }
 
                 // Process all interfaces 
-                Class<?>[] interfaces = current_cls.getInterfaces()
-                for (Class<?> interface : interfaces) {
+                Class<?>[] interfaces = current_cls.getInterfaces();
+                for (Class<?> _interface : interfaces) {
                    
                     // If the interface hasn't been recorded, add it to discoveredSupertypes
-                    if (discoveredSupertypes.add(interface)) {     
-                        pairs_supertypes.put(current_cls.getName(), interface.getName());
-                        stack.push(interface);
+                    if (discoveredSupertypes.add(_interface)) {     
+                        pairs_supertypes.put(current_cls.getName(), _interface.getName());
+                        stack.push(_interface);
                     }
                 }
             }
@@ -192,26 +192,21 @@ public class Reflection {
 
 
     public void Subtypes(String className){
-        
-        try{
+                   
+        Utils utils = new Utils();
             
-            Utils utils = new Utils();
-            
-            // If supertypes haven't been discovered yet, find them!
-            // Subtypes are identified through their supertypes.
-            // We examine the relationship in the opposite direction, 
-            // that is, from superclass to subclass.
-            if(pair_supertypes.isEmpty()){ Supertypes(className); }
-
-            Map<String, List<String>> groupedMap = utils.groupBySuperclass(pairs_supertypes);
+        // If supertypes haven't been discovered yet, find them!
+        // Subtypes are identified through their supertypes.
+        // We examine the relationship in the opposite direction, 
+        // that is, from superclass to subclass.
+        if(pairs_supertypes.isEmpty()){ Supertypes(className); }
         
-            subtypes.put(className, groupedMap.size());
-        } 
-        catch (ClassNotFoundException e) {
-            System.out.println("Class " + className + " was not found!");
-        }
+        Map<String, List<String>> groupedMap = utils.groupBySuperclass(pairs_supertypes);
+        subtypes.put(className, groupedMap.size());
+        
+    } 
 
-    }
+    
 
 
     public Map<String, Integer> get_DeclaredFields(){ return declaredFields; }
