@@ -3,7 +3,7 @@ import java.io.PrintStream;
 
 import modules.Config;
 import modules.Reflection;
-import modules.ManageFile;
+import modules.FileManager;
 import modules.Utils;
 
 import java.util.Map;
@@ -12,10 +12,11 @@ import java.util.List;
 
 public class Main {
 
-    public static void process(Reflection reflection, List<String> classes){
-                                
+    public static void process(Reflection reflection, List<String> classes)
+    {                            
             // process each class
-            for (String className : classes) {
+            for (String className : classes) 
+            {
                 // System.out.println(className);
                     
                 // ---------->          1. Fields            <----------
@@ -43,8 +44,8 @@ public class Main {
     }
 
 
-    public static void extractTopN(Reflection reflection, Config config){
-        
+    public static void extractTopN(Reflection reflection, Config config)
+    {    
         // create utility object to sort and extract top N elements
         Utils utils = new Utils();
         
@@ -66,7 +67,8 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
 
        try {  
             // validate and store arguments!
@@ -77,11 +79,11 @@ public class Main {
             System.setOut(fileOut);
             
             // create file manager and read input file
-            ManageFile managefile = new ManageFile();
-            managefile.read_file(config.get_input_file());
+            FileManager fileManager = new FileManager();
+            fileManager.read_file(config.get_input_file());
 
             // perform reflection process on classes
-            List<String> classes = managefile.get_classes();
+            List<String> classes = fileManager.get_classes();
             Reflection reflection = new Reflection();
             process(reflection, classes);
             

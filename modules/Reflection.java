@@ -50,8 +50,8 @@ public class Reflection {
 
     } 
 
-    public void DeclaredFields(String className) {
-        
+    public void DeclaredFields(String className) 
+    {       
         try {
             Class<?> cls = Class.forName(className);
             declaredFields.put(cls.getName(), cls.getDeclaredFields().length);
@@ -61,8 +61,8 @@ public class Reflection {
         }
     }
 
-    public void TotalFields(String className) {
-
+    public void TotalFields(String className) 
+    {
         try {
             Class<?> cls = Class.forName(className);
             Class<?> superClass = cls.getSuperclass();
@@ -70,16 +70,15 @@ public class Reflection {
             int totalFieldCount = cls.getDeclaredFields().length;
 
             // iterate through the class and all its superclasses
-            while (superClass != null) {
-
-                for (Field field : superClass.getDeclaredFields()) {
-                    
+            while (superClass != null) 
+            {
+                for (Field field : superClass.getDeclaredFields()) 
+                {    
                     int modifiers = field.getModifiers();
                     
                     // only count public and protected fields
-                    if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers)) {
+                    if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers)) 
                         totalFieldCount++;
-                    }
                 }
                 superClass = superClass.getSuperclass();
             }
@@ -91,29 +90,26 @@ public class Reflection {
         }
     }
 
-    public void DeclaredMethods(String className) {
-        
+    public void DeclaredMethods(String className) 
+    {    
         try {
             Class<?> cls = Class.forName(className);
             Method[] methods = cls.getDeclaredMethods();
-           
-            // System.out.println(methods.length);
-           
+                   
             Set<String> auxiliary_set = new HashSet<>(); // using a HashSet to avoid duplicate entries
             
             for(Method method : methods)
                 auxiliary_set.add(method.getName());
             
             declaredMethods.put(cls.getName(), auxiliary_set.size());
-
         } 
         catch (ClassNotFoundException e){
             System.out.println("Class " + className + " was not found!");
         }        
     }
 
-    public void TotalMethods(String className) {
-
+    public void TotalMethods(String className) 
+    {
         try {
             Class<?> cls = Class.forName(className);
             Set<String> auxiliary_set = new HashSet<>();
@@ -127,25 +123,26 @@ public class Reflection {
             while (superClass != null) {
                 Method[] superMethods = superClass.getDeclaredMethods();
 
-                for (Method method : superMethods) {
+                for (Method method : superMethods) 
+                {
                     int modifiers = method.getModifiers();
 
                     // check if the method is public or protected
-                    if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers)) {
+                    if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers)) 
                         auxiliary_set.add(method.getName());
-                    }
                 }
 
                 superClass = superClass.getSuperclass();
             }
-
             totalMethods.put(className, auxiliary_set.size());
+
         } catch (ClassNotFoundException e) {
             System.out.println("Class " + className + " was not found!");
         }
     }
 
-    public void Supertypes(String className) {
+    public void Supertypes(String className) 
+    {
         try {
             // Set to keep track of discovered supertypes and avoid duplicates
             Set<Class<?>> discoveredSupertypes = new HashSet<>();
@@ -153,7 +150,8 @@ public class Reflection {
             // Start the recursive process from the target class
             SupertypesRecursively(Class.forName(className), discoveredSupertypes);
 
-            for (Class<?> supertype : discoveredSupertypes) {
+            for (Class<?> supertype : discoveredSupertypes) 
+            {
                 pairs_supertypes.putIfAbsent(className, new ArrayList<>());
                 pairs_supertypes.get(className).add(supertype.getName());
             }
@@ -165,42 +163,44 @@ public class Reflection {
         }
     }
 
-    private void SupertypesRecursively(Class<?> currentClass, Set<Class<?>> discoveredSupertypes) {
+    private void SupertypesRecursively(Class<?> currentClass, Set<Class<?>> discoveredSupertypes) 
+    {
         // Retrieve the superclass of the current class
         Class<?> superClass = currentClass.getSuperclass();
 
         // Check if the superclass is valid, not Object, and hasn't been processed
-        if (superClass != null && superClass != Object.class && discoveredSupertypes.add(superClass)) {
+        if (superClass != null && superClass != Object.class && discoveredSupertypes.add(superClass)) 
             SupertypesRecursively(superClass, discoveredSupertypes);
-        }
 
         // Process all interfaces of the current class
         Class<?>[] interfaces = currentClass.getInterfaces();
-        for (Class<?> iface : interfaces) {
+        for (Class<?> iface : interfaces) 
+        {
             // If the interface hasn't been recorded, add it to discoveredSupertypes
-            if (discoveredSupertypes.add(iface)) {
-                SupertypesRecursively(iface, discoveredSupertypes);
-            }
+            if (discoveredSupertypes.add(iface)) 
+                SupertypesRecursively(iface, discoveredSupertypes); 
         }
     }
 
 
-    public void Subtypes(String className, List<String> classes){
-                   
+    public void Subtypes(String className, List<String> classes)
+    {               
         Utils utils = new Utils();
             
         // If supertypes haven't been discovered yet, find them!
         // Subtypes are identified through their supertypes.
         // We examine the relationship in the opposite direction, 
         // that is, from superclass to subclass.
-        if(pairs_supertypes.isEmpty()){ 
+        if(pairs_supertypes.isEmpty())
             for (String clsName : classes){ Supertypes(clsName); }
-        }
+        
 
-        if(groupedMap.isEmpty()){ groupedMap = utils.groupBySuperclass(pairs_supertypes); }
+        if(groupedMap.isEmpty()) 
+            groupedMap = utils.groupBySuperclass(pairs_supertypes); 
        
         List<String> value = groupedMap.get(className);
-        if (value != null) {
+        if (value != null) 
+        {
             int size = value.size();
             subtypes.put(className, size);
             

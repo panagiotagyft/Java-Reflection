@@ -11,12 +11,12 @@ import java.util.ArrayList;
 
 
 
-public class ManageFile {
+public class FileManager {
 
     private List<String> classes;
     
-    public void read_file(String file_path) {
-
+    public void read_file(String file_path) 
+    {
         this.classes = new ArrayList<>();
 
         List<String> lines = new ArrayList<>();
@@ -31,9 +31,9 @@ public class ManageFile {
             System.out.println("An unexpected error: " + e.getMessage());
         }
         
-           
         // process each class
-        for (String className : lines) {       
+        for (String className : lines) 
+        {       
             try {        
                 Class<?> cls = Class.forName(className);
                 classes.add(className);
