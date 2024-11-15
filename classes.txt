@@ -1,7 +1,0 @@
-java.lang.Object
-java.util.Scanner
-example.Electronic
-example.Employee
-example.Toll
-example.Vehicle
-example.VehicleOperations
