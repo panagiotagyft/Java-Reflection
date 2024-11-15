@@ -22,9 +22,6 @@ public class Config {
             System.out.println("Too many arguments...\n");
             System.exit(1);
         }
-        else{
-            System.out.println("Success!");
-        }
 
         Utils utils = new Utils();
 
@@ -33,9 +30,7 @@ public class Config {
         if (!utils.isValidFilePath(input_file) || !utils.isValidFilePath(output_file)){ 
             System.exit(1);    
         }
-        else if ( (input_file == null || input_file.isEmpty()) 
-                || (output_file == null || output_file.isEmpty()) ) {
-
+        else if ( (input_file == null || input_file.isEmpty()) ) {
             System.out.println("Error! Input file is not specified.");
             System.exit(1);
         }        
@@ -50,7 +45,7 @@ public class Config {
     }
 
     public String get_input_file(){ return input_file; }
-
+    public String get_output_file(){ return output_file; }
     public int get_N(){ return value_of_N; }
 
 }

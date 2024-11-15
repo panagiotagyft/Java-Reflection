@@ -39,17 +39,13 @@ public class Utils {
             }
         }
 
-        // minHeap.forEach(System.out::println);
-
         // extract the keys from the minheap and insert them in reverse order into the list
         List<String> topN = new ArrayList<>();
         while (!minHeap.isEmpty()) {
-            // topN.add(0, minHeap.poll().getKey());
             Map.Entry<String, Integer> entry = minHeap.poll();
             topN.add(0, entry.getKey() + "=" + entry.getValue());
         }
-        topN.forEach(System.out::println);
-
+ 
         // Return the list of top N keys
         return topN;
     }
