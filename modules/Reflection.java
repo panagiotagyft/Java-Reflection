@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Comparator;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Field;
 
 public class Reflection {
     
@@ -29,7 +29,9 @@ public class Reflection {
     // Supertypes
     private Map<String, Integer> supertypes;
 
-    private Map<String, String> pairs_supertypes;
+    // Auxiliary Maps
+    private Map<String, List<String>> pairs_supertypes;
+    private Map<String, List<String>> groupedMap; 
 
     public Reflection(){
 
@@ -44,6 +46,7 @@ public class Reflection {
         this.supertypes = new HashMap<>();
 
         this.pairs_supertypes = new HashMap<>();
+        this.groupedMap = new HashMap<>();
 
     } 
 
@@ -96,7 +99,7 @@ public class Reflection {
            
             // System.out.println(methods.length);
            
-            Set<String> auxiliary_set = new HashSet<>();
+            Set<String> auxiliary_set = new HashSet<>(); // using a HashSet to avoid duplicate entries
             
             for(Method method : methods)
                 auxiliary_set.add(method.getName());
@@ -115,22 +118,25 @@ public class Reflection {
             Class<?> cls = Class.forName(className);
             Set<String> auxiliary_set = new HashSet<>();
 
-            while (cls != null) {
-                Method[] methods = cls.getDeclaredMethods();
+            Method[] methods = cls.getDeclaredMethods();
+            for(Method method : methods)
+                auxiliary_set.add(method.getName());
 
-                for (Method method : methods) {
+            Class<?> superClass = cls.getSuperclass();
+
+            while (superClass != null) {
+                Method[] superMethods = superClass.getDeclaredMethods();
+
+                for (Method method : superMethods) {
                     int modifiers = method.getModifiers();
 
-                    // check if the method is not static
-                    if (!Modifier.isStatic(modifiers)) {
-                        // check if the method is public or protected
-                        if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers)) {
-                            auxiliary_set.add(method.getName());
-                        }
+                    // check if the method is public or protected
+                    if (Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers)) {
+                        auxiliary_set.add(method.getName());
                     }
                 }
 
-                cls = cls.getSuperclass();
+                superClass = superClass.getSuperclass();
             }
 
             totalMethods.put(className, auxiliary_set.size());
@@ -140,58 +146,46 @@ public class Reflection {
     }
 
     public void Supertypes(String className) {
-
-        //stack used to store classes as we traverse through their supertypes
-        Stack<Class<?>> stack = new Stack<>();
-
         try {
             // Set to keep track of discovered supertypes and avoid duplicates
             Set<Class<?>> discoveredSupertypes = new HashSet<>();
+            
+            // Start the recursive process from the target class
+            SupertypesRecursively(Class.forName(className), discoveredSupertypes);
 
-            // Begin with the target class
-            stack.push(Class.forName(className));
-
-            // Process each class in the stack until it's empty
-            while (!stack.isEmpty()) {
-                Class<?> current_cls = stack.pop();
-
-                // Retrieve the superclass of the current class
-                Class<?> superClass = current_cls.getSuperclass();
-
-                // Check if the superclass is valid, not Object, and hasn't been processed
-                if (superClass != null && superClass != Object.class && discoveredSupertypes.add(superClass)) {
-
-                    pairs_supertypes.put(current_cls.getName(), superClass.getName());
-                    stack.push(superClass);
-                }
-
-                // Process all interfaces 
-                Class<?>[] interfaces = current_cls.getInterfaces();
-                for (Class<?> _interface : interfaces) {
-                   
-                    // If the interface hasn't been recorded, add it to discoveredSupertypes
-                    if (discoveredSupertypes.add(_interface)) {     
-                        pairs_supertypes.put(current_cls.getName(), _interface.getName());
-                        stack.push(_interface);
-                    }
-                }
+            for (Class<?> supertype : discoveredSupertypes) {
+                pairs_supertypes.putIfAbsent(className, new ArrayList<>());
+                pairs_supertypes.get(className).add(supertype.getName());
             }
 
-            // Print the names of all discovered supertypes
-            discoveredSupertypes.forEach(supertype -> System.out.println(supertype.getName()));
-
-            // Record the number of supertypes discovered for the given class
             supertypes.put(className, discoveredSupertypes.size());
 
-        } 
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             System.out.println("Class " + className + " was not found!");
         }
+    }
 
+    private void SupertypesRecursively(Class<?> currentClass, Set<Class<?>> discoveredSupertypes) {
+        // Retrieve the superclass of the current class
+        Class<?> superClass = currentClass.getSuperclass();
+
+        // Check if the superclass is valid, not Object, and hasn't been processed
+        if (superClass != null && superClass != Object.class && discoveredSupertypes.add(superClass)) {
+            SupertypesRecursively(superClass, discoveredSupertypes);
+        }
+
+        // Process all interfaces of the current class
+        Class<?>[] interfaces = currentClass.getInterfaces();
+        for (Class<?> iface : interfaces) {
+            // If the interface hasn't been recorded, add it to discoveredSupertypes
+            if (discoveredSupertypes.add(iface)) {
+                SupertypesRecursively(iface, discoveredSupertypes);
+            }
+        }
     }
 
 
-    public void Subtypes(String className){
+    public void Subtypes(String className, List<String> classes){
                    
         Utils utils = new Utils();
             
@@ -199,18 +193,23 @@ public class Reflection {
         // Subtypes are identified through their supertypes.
         // We examine the relationship in the opposite direction, 
         // that is, from superclass to subclass.
-        if(pairs_supertypes.isEmpty()){ Supertypes(className); }
-        
-        Map<String, List<String>> groupedMap = utils.groupBySuperclass(pairs_supertypes);
-        subtypes.put(className, groupedMap.size());
+        if(pairs_supertypes.isEmpty()){ 
+            for (String clsName : classes){ Supertypes(clsName); }
+        }
+
+        if(groupedMap.isEmpty()){ groupedMap = utils.groupBySuperclass(pairs_supertypes); }
+       
+        List<String> value = groupedMap.get(className);
+        if (value != null) {
+            int size = value.size();
+            subtypes.put(className, size);
+            
+        } else { subtypes.put(className, 0 ); }
         
     } 
 
-    
-
-
     public Map<String, Integer> get_DeclaredFields(){ return declaredFields; }
-    
+
     public Map<String, Integer> get_TotalFields(){ return totalFields; }
 
     public Map<String, Integer> get_DeclaredMethods(){ return declaredMethods; }

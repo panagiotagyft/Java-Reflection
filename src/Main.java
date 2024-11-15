@@ -47,24 +47,24 @@ public class Main {
                 reflection.TotalMethods(className);
 
                 reflection.Supertypes(className);
-                System.out.println("!------------");
-                reflection.Subtypes(className);
-
             }
+
+            for (String className : classes) { reflection.Subtypes(className, classes); }
                     
             // extract the top N declared fields
+            System.out.println("1a");
             List<String> topN_DeclaredFields = utils.get_topN(reflection.get_DeclaredFields(), config.get_N());
-            System.out.println("-------------");
+            System.out.println("1b");
             List<String> topN_TotalFields = utils.get_topN(reflection.get_TotalFields(), config.get_N());
-            System.out.println("-------------");
+            System.out.println("2a");
             List<String> topN_DeclaredMethods = utils.get_topN(reflection.get_DeclaredMethods(), config.get_N());
-            System.out.println("-------------");
+            System.out.println("2b");
             List<String> topN_TotalMethods = utils.get_topN(reflection.get_TotalMethods(), config.get_N());
-            System.out.println("-------------");
+            System.out.println("4");
             List<String> topN_Supertypes = utils.get_topN(reflection.get_Supertypes(), config.get_N());
-            System.out.println("-------------");
+            System.out.println("3!");
             List<String> topN_Subtypes = utils.get_topN(reflection.get_Subtypes(), config.get_N());
-            System.out.println("-------------");
+    
         }catch (IOException e) {
             System.out.println("An unexpected error: " + e.getMessage());
         }

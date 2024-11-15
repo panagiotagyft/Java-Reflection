@@ -39,37 +39,44 @@ public class Utils {
             }
         }
 
-        minHeap.forEach(System.out::println);
+        // minHeap.forEach(System.out::println);
 
         // extract the keys from the minheap and insert them in reverse order into the list
         List<String> topN = new ArrayList<>();
         while (!minHeap.isEmpty()) {
-            topN.add(0, minHeap.poll().getKey());
+            // topN.add(0, minHeap.poll().getKey());
+            Map.Entry<String, Integer> entry = minHeap.poll();
+            topN.add(0, entry.getKey() + "=" + entry.getValue());
         }
+        topN.forEach(System.out::println);
 
         // Return the list of top N keys
         return topN;
     }
 
 
-    public Map<String, List<String>> groupBySuperclass(Map<String, String> pairs) {
-        
+    public Map<String, List<String>> groupBySuperclass(Map<String, List<String>> pairs) {
+
         //initialize a new map to store the superclass as key and its subclasses as values
         Map<String, List<String>> groupedMap = new HashMap<>();
 
-        // iterate over each (classname, superclass) entry in the input map
-        for (Map.Entry<String, String> entry : pairs.entrySet()) {
+        // iterate over each (classname, [superclasses]) entry in the input map
+        for (Map.Entry<String, List<String>> entry : pairs.entrySet()) {
             String subclass = entry.getKey();
-            String superclass = entry.getValue();
+            List<String> superclasses = entry.getValue();
 
-            // group by superclass, adding the subclass to its list
-            groupedMap.putIfAbsent(superclass, new ArrayList<>());
-            groupedMap.get(superclass).add(subclass);
+            // iterate over each superclass in the list of superclasses
+            for (String superclass : superclasses) {
+                // group by superclass, adding the subclass to its list
+                groupedMap.putIfAbsent(superclass, new ArrayList<>());
+                groupedMap.get(superclass).add(subclass);
+            }
         }
 
-        // return the map with (superclass, [subclasses]) structure
+        // Return the map with (superclass, [subclasses]) structure
         return groupedMap;
     }
+
 
 
 }

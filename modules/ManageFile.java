@@ -40,6 +40,7 @@ public class ManageFile {
 
             } catch (ClassNotFoundException e) {
                 System.out.println("An unexpected error: " + e.getMessage());
+                System.exit(1);
             }
         }                
     }
