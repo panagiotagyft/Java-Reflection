@@ -55,25 +55,25 @@ public class Utils {
 
     public Map<String, List<String>> groupBySuperTypes(Map<String, List<String>> pairs) 
     {
-        //initialize a new map to store the superclass as key and its subclasses as values
+        //initialize a new map to store the supertype as key and its subtypes as values
         Map<String, List<String>> groupedMap = new HashMap<>();
 
-        // iterate over each (classname, [superclasses]) entry in the input map
+        // iterate over each (classname, [supertypes]) entry in the input map
         for (Map.Entry<String, List<String>> entry : pairs.entrySet()) 
         {
             String subclass = entry.getKey();
-            List<String> superclasses = entry.getValue();
+            List<String> supertypes = entry.getValue();
 
-            // iterate over each superclass in the list of superclasses
-            for (String superclass : superclasses) 
+            // iterate over each supertype in the list of supertypes
+            for (String supertype : supertypes) 
             {
-                // group by superclass, adding the subclass to its list
-                groupedMap.putIfAbsent(superclass, new ArrayList<>());
-                groupedMap.get(superclass).add(subclass);
+                // group by supertype, adding the subclass to its list
+                groupedMap.putIfAbsent(supertype, new ArrayList<>());
+                groupedMap.get(supertype).add(subclass);
             }
         }
 
-        // Return the map with (superclass, [subclasses]) structure
+        // Return the map with (superttypes]) structure
         return groupedMap;
     }
 
