@@ -33,21 +33,16 @@ public class Reflection {
     private Map<String, List<String>> pairs_supertypes;
     private Map<String, List<String>> groupedMap; 
 
-    public Reflection(){
-
+    public Reflection()
+    {
         this.declaredFields = new HashMap<>();
         this.totalFields = new HashMap<>();
-
         this.declaredMethods = new HashMap<>();
         this.totalMethods = new HashMap<>();
-
         this.subtypes = new HashMap<>();
-
         this.supertypes = new HashMap<>();
-
         this.pairs_supertypes = new HashMap<>();
         this.groupedMap = new HashMap<>();
-
     } 
 
     public void DeclaredFields(String className) 
