@@ -1,6 +1,6 @@
-1a: java.util.Scanner=46, example.Vehicle=4, example.Toll=4, example.Electronic=2, example.Employee=2, java.lang.Object=0, example.VehicleOperations=0
-1b: java.util.Scanner=46, example.Vehicle=4, example.Toll=4, example.Electronic=2, example.Employee=2, java.lang.Object=0, example.VehicleOperations=0
-2a: java.util.Scanner=68, java.lang.Object=10, example.Toll=9, example.Vehicle=5, example.Electronic=4, example.VehicleOperations=4, example.Employee=4
-2b: java.util.Scanner=76, example.Electronic=21, example.Employee=21, example.Toll=18, example.Vehicle=14, java.lang.Object=10, example.VehicleOperations=4
-3:  example.VehicleOperations=3, example.Toll=2, example.Electronic=0, example.Vehicle=0, java.util.Scanner=0, java.lang.Object=0, example.Employee=0
-4:  java.util.Scanner=3, example.Electronic=2, example.Employee=2, example.Toll=1, java.lang.Object=0, example.Vehicle=0, example.VehicleOperations=0
+1a: java.util.Scanner=46, example.Vehicle=4, example.Toll=4
+1b: java.util.Scanner=46, example.Vehicle=4, example.Toll=4
+2a: java.util.Scanner=68, java.lang.Object=10, example.Toll=9
+2b: java.util.Scanner=76, example.Electronic=21, example.Employee=21
+3:  example.VehicleOperations=3, example.Toll=2, java.lang.Object=0
+4:  java.util.Scanner=3, example.Electronic=2, example.Employee=2
