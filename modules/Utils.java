@@ -53,7 +53,7 @@ public class Utils {
     }
 
 
-    public Map<String, List<String>> groupBySuperclass(Map<String, List<String>> pairs) 
+    public Map<String, List<String>> groupBySuperTypes(Map<String, List<String>> pairs) 
     {
         //initialize a new map to store the superclass as key and its subclasses as values
         Map<String, List<String>> groupedMap = new HashMap<>();

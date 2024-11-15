@@ -139,10 +139,9 @@ public class Reflection {
     public void Supertypes(String className) 
     {
         try {
-            // Set to keep track of discovered supertypes and avoid duplicates
             Set<Class<?>> discoveredSupertypes = new HashSet<>();
             
-            // Start the recursive process from the target class
+            // start the recursive process from the target class
             SupertypesRecursively(Class.forName(className), discoveredSupertypes);
 
             for (Class<?> supertype : discoveredSupertypes) 
@@ -160,18 +159,18 @@ public class Reflection {
 
     private void SupertypesRecursively(Class<?> currentClass, Set<Class<?>> discoveredSupertypes) 
     {
-        // Retrieve the superclass of the current class
+        // retrieve the superclass of the current class
         Class<?> superClass = currentClass.getSuperclass();
 
-        // Check if the superclass is valid, not Object, and hasn't been processed
+        // check if the superclass is valid, not Object, and hasn't been processed
         if (superClass != null && superClass != Object.class && discoveredSupertypes.add(superClass)) 
             SupertypesRecursively(superClass, discoveredSupertypes);
 
-        // Process all interfaces of the current class
+        // process all interfaces of the current class
         Class<?>[] interfaces = currentClass.getInterfaces();
         for (Class<?> iface : interfaces) 
         {
-            // If the interface hasn't been recorded, add it to discoveredSupertypes
+            // if the interface hasn't been recorded, add it to discoveredSupertypes
             if (discoveredSupertypes.add(iface)) 
                 SupertypesRecursively(iface, discoveredSupertypes); 
         }
@@ -191,7 +190,7 @@ public class Reflection {
         
 
         if(groupedMap.isEmpty()) 
-            groupedMap = utils.groupBySuperclass(pairs_supertypes); 
+            groupedMap = utils.groupBySuperTypes(pairs_supertypes); 
        
         List<String> value = groupedMap.get(className);
         if (value != null) 

@@ -1,4 +1,4 @@
-# Καθορισμός φακέλων και εξαρτήσεων
+# Define directories and dependencies
 SRC_DIR = src
 MODULES_DIR = modules
 TEST_DIR = tests
@@ -7,30 +7,30 @@ LIBS = libs/junit-platform-console-standalone-1.8.1.jar
 
 .PHONY: all clean run run-program run-tests
 
-# Στόχος all: Εκτελεί τη μεταγλώττιση του προγράμματος και των tests
+# Target 'all': Compiles the program and the tests
 all: program program_tests
 
-# Μεταγλώττιση όλων των modules στον φάκελο build/program
+# Compile all modules into the build/program directory
 program: $(patsubst $(MODULES_DIR)/%.java,$(BUILD_DIR)/program/%.class,$(shell find $(MODULES_DIR) -name "*.java"))
 	@echo "Compiling Main.java..."
 	javac -cp $(BUILD_DIR)/program -d . $(SRC_DIR)/Main.java
 
-# Κανόνας για τη μεταγλώττιση κάθε αρχείου .java στον φάκελο modules σε αντίστοιχο .class στον φάκελο build/program
+# Rule for compiling each .java file in the modules directory into a corresponding .class file in the build/program directory
 $(BUILD_DIR)/program/%.class: $(MODULES_DIR)/%.java
 	@mkdir -p $(BUILD_DIR)/program
 	@echo "Compiling $< into $@"
 	javac -cp . -d $(BUILD_DIR)/program $<
 
-# Μεταγλώττιση των tests μόνο αν τα .class αρχεία δεν είναι ενημερωμένα
+# Compile tests only if the .class files are outdated
 program_tests: $(patsubst $(TEST_DIR)/%.java,$(BUILD_DIR)/tests/%.class,$(shell find $(TEST_DIR) -name "*.java"))
 
-# Κανόνας για τη μεταγλώττιση κάθε αρχείου .java στον φάκελο tests σε αντίστοιχο .class στον φάκελο build/tests
+# Rule for compiling each .java file in the tests directory into a corresponding .class file in the build/tests directory
 $(BUILD_DIR)/tests/%.class: $(TEST_DIR)/%.java program
 	@mkdir -p $(BUILD_DIR)/tests
 	@echo "Compiling $< into $@"
 	javac -cp $(BUILD_DIR)/program:$(LIBS) -d $(BUILD_DIR)/tests $<
 
-# Στόχοι για εκτέλεση του προγράμματος και των tests
+# Targets for running the program and tests
 run: run-program run-tests
 
 run-program: program
@@ -41,7 +41,7 @@ run-tests: program_tests
 	@echo "Running tests..."
 	java -cp $(BUILD_DIR)/program:$(BUILD_DIR)/tests:$(LIBS) org.junit.platform.console.ConsoleLauncher --scan-class-path=$(BUILD_DIR)/tests
 
-# Καθαρισμός όλων των φακέλων build και του Main.class
+# Clean up all build directories and Main.class
 clean:
 	@echo "Cleaning build directories and Main.class..."
 	rm -rf $(BUILD_DIR)
