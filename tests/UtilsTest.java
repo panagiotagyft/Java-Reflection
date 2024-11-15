@@ -17,7 +17,7 @@ public class UtilsTest {
     public void testIsValidFilePath() 
     {    
         // "classes.txt" -->>> valid file path
-        assertTrue(utils.isValidFilePath("classes.txt"));
+        assertTrue(utils.isValidFilePath("input.txt"));
 
         // "./invalid_path.txt" 
         assertFalse(utils.isValidFilePath("./invalid_path.txt"));
